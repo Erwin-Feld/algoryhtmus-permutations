@@ -22,7 +22,6 @@ function permApply(elementObjects, permutations) {
   );
 
 
-
   /*  storage */
   const resultContainer = [];
 
@@ -39,12 +38,13 @@ function permApply(elementObjects, permutations) {
      /*  */
     let counter = 0;
      /*  */
+    //  TODO Change Name 
     const stringContainer = [];
 
     /*loops over each item of the chunkPermutation [1,2,3] --> 1...2...3
                                   elementMassArray [50.44, 66.33..] ---> 50.44 ...66.33
                                   elementNamesArray [Iron, Sulfit] ---> Iron..Sulfit...
-            get all single values 
+            get  single value of each 
     */  
     for (const [singlePermutation, elementMass, elementName] of _.zip(chunkPermutation, elementMassArray, elementNamesArray)) {
 
@@ -54,6 +54,8 @@ function permApply(elementObjects, permutations) {
       /*------- String-Part-start-------------------------------------*/
       
        /* makes string of each values like 3 * 50.66 - Iron   */
+         //  TODO Change Name 
+         
       const singleCompString = singlePermutation  + " * " + elementMass + elementName;
 
       
@@ -71,7 +73,7 @@ function permApply(elementObjects, permutations) {
         const plus = " + "
 
         singleCompString + plus
-        // append x an  + inside
+    
       
         stringContainer.push(singleCompString);
         // console.log(stringArray)
@@ -81,9 +83,11 @@ function permApply(elementObjects, permutations) {
 
 
        /* String Part  finish-----*-----------*------------*---------*/
-
+      // TEST  Result wird mit 3 nachkommastellen gemacht
       let result = (singlePermutation * elementMass);
-      // TODO EINFÜGEN DAS SINGLEPERM * MASS NUR 3 NACHKOMMASTELLEN HAT 
+     
+      // TODO EINFÜGEN DAS SINGLEPERM * MASS NUR 3 NACHKOMMASTELLEN HAT  
+      // RESULT Geht iwi net dauert noch länger es muss die Computation mutiplication verändert werden das ergebnis nur 3 nachkommstellen haben kann
       // maximal 3 nachkommastellen 
       // https://stackoverflow.com/a/48635528/14809198
       sum += result;
@@ -102,22 +106,30 @@ function permApply(elementObjects, permutations) {
   }
 
   //  SCHLEIFE UM wERTE ANZUZEIGEN
-  for (const elementArray of resultContainer) {
-    // console.log(elementArray)
-    console.log(_.last(elementArray))
-   
-  //  for (const zahl of elementArray) {
-  //    console.log(zahl)
-  //   //  if (zahl >= 966 && zahl <= 964) {
-  //   //    console.log(elementArray)
+  // TEST Schleife Weg 
 
-  //   //  } else {
-  //   //    console.log("no range")
-  //   //  }
-  //  }
+  /*
+   RESULT// Schleife dauert 5 Sekunden !!!
+  */
+  
+
+  // for (const elementArray of resultContainer) {
+  //   // console.log(elementArray)
+  //   console.log(_.last(elementArray))
    
-  } 
+  // //  for (const zahl of elementArray) {
+  // //    console.log(zahl)
+  // //   //  if (zahl >= 966 && zahl <= 964) {
+  // //   //    console.log(elementArray)
+
+  // //   //  } else {
+  // //   //    console.log("no range")
+  // //   //  }
+  // //  }
+   
+  // } 
  
+  // TEST ENDE
 
 
 
@@ -128,60 +140,47 @@ function permApply(elementObjects, permutations) {
 }
 
 
+function performanceTest(){
+  console.time();
+
+  permApply([
+    // Correct
+    // { Element: "Eisen", Mass: 55.935 },
+    // { Element: "Ölsäure", Mass: 281.248 },
+    // { Element: "Sauerstoff", Mass: 15.995 },
+
+
+    { Element: "Fe", Mass: 55.935 },
+
+    { Element: "OA", Mass: 281.248 },
+    { Element: "LA", Mass: 279.233 },
+   
+  ],
+  [0,1, 2,3,4,5,6,7,8,9,10]
+
+  )
+
+
+  console.timeEnd();
+
+
+}
+
+
 
 export default function App() {
   return (
 
     <div>
-      <button onClick={(e)=> {permApply( [
-          // Correct
-          // { Element: "Eisen", Mass: 55.935 },
-          // { Element: "Ölsäure", Mass: 281.248 },
-          // { Element: "Sauerstoff", Mass: 15.995 },
-
-
-          { Element: "Fe", Mass: 55.935 },
-
-          { Element: "OA", Mass: 281.248 },
-          { Element: "LA", Mass: 279.233 },
-          // { Element: "H2O", Mass: 18.011 },
-          // { Element: "O", Mass: 15.995 },
-          // { Element: " CO3", Mass: 59.985 },
-
-
-          // { Element: "SA", Mass: 283.264 },
-          // { Element: "Na", Mass: 22.98977 },
-          // { Element: "CH2", Mass: 14.016 },
-          // { Element: "C", Mass: 12.000 },
-          // { Element: "H", Mass: 1.008 },
-
-
-        ],
-        [0,1, 2,3,4,5,6,7,8,9,10]
-
-      )}}>click me</button>
+      <button onClick={()=> performanceTest()}>click me</button>
     <p> 
 
-      {/* {permApply(
-        [
-          // Correct
-          // { Element: "Eisen", Mass: 55.935 },
-          // { Element: "Ölsäure", Mass: 281.248 },
-          // { Element: "Sauerstoff", Mass: 15.995 },
-
-
-           { Element: "Eisen", Mass: 55.935 },
-          { Element: "Ölsäure", Mass: 281.248 },
-          { Element: "Sauerstoff", Mass: 15.995 },
-
-
-        ],
-        [0,1, 2,3,4,5,6,7,8,9,10]
-      )} */}
     </p>
     </div>
   );
 }
+
+
 
 
 
