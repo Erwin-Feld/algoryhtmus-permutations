@@ -4,9 +4,9 @@ import ReactDOM from "react-dom";
 
 import { Permutation } from "js-combinatorics";
 
-import _, { zip, last } from "underscore";
-
-function permApply(elementObjects, permutations) {
+import _, { zip, last, values } from "underscore";
+                    // data           max perm     solutin       deviation +/- to solution 
+function permApply(elementObjects, permutations, solution, maxDeviation ) {
   console.log("function starting");
   /* paramterObjects to Arrays  */
   const elementNamesArray = elementObjects.map((a) => a.Element);
@@ -38,49 +38,73 @@ function permApply(elementObjects, permutations) {
       elementMassArray,
       elementNamesArray
     )) {
-      
-    
-
       counter++;
-       // BUG War counter unten  
+      // BUG War counter unten
 
       /* -----caculation-part---start--------------------------------------------------------------------*/
 
-      let result =
-        Math.round(
-          (singlePermutation + Number.EPSILON) * (elementMass + Number.EPSILON)
-        ) / 100;
+      let result = singlePermutation * elementMass
+      // WIESO das untere hat ein Scheiß gemacht diggah 
+        // Math.round(
+        //   (singlePermutation + Number.EPSILON) * (elementMass + Number.EPSILON)
+        // ) / 100;
 
       sum += result;
-       /* -----caculation-part---end--------------------------------------------------------------------*/
-       
-       
-        let equasionString =  singlePermutation + " * " + elementMass + " " + elementName;
+      /* -----caculation-part---end--------------------------------------------------------------------*/
 
-        if (counter < chunkPermutation.length) {
+      let equasionString =
+        singlePermutation + " * " + elementMass + " " + elementName;
+
+      if (counter < chunkPermutation.length) {
+        // BUG War use of concat
+        equasionString += " + ";
+        equasions.push(equasionString);
+      } else if (counter === chunkPermutation.length) {
+
+        if (sum >= (solution - maxDeviation) && sum <= (solution + maxDeviation)) {
+          // Abweichungswert +/- Max ist 5 
         
-          // BUG War use of concat 
-          equasionString += " + "  
-          equasions.push(equasionString)
-        
-        } else if (counter === chunkPermutation.length) {
-          equasionString += " = "
-          equasions.push(equasionString)
+          // TEST Range Check
+          // 
+          //  if sum <= result -3 // between
+          equasionString += " = ";
+          equasions.push(equasionString);
 
-    
-          const joinedEquasionString = equasions.join (" ")
-          
-          const joinedEquasionArray = [joinedEquasionString]
-          // daraus ein array machen 
+          const joinedEquasionString = equasions.join(" ");
 
-          joinedEquasionArray.push([sum])
+          const joinedEquasionArray = [joinedEquasionString];
+          // daraus ein array machen
+
+          joinedEquasionArray.push([sum]);
 
           resultContainer.push(joinedEquasionArray);
         }
-
+      }
     }
   }
-  console.log(resultContainer[0]);
+
+  
+  // compares to get the closes result to the solution
+  function compare(a, b) {
+ 
+    const aAbs = Math.abs(a[1] - solution);
+    const bAbs = Math.abs(b[1] - solution);
+    return aAbs - bAbs;
+  }
+
+  // sort compares two elements and sort them to array with everything is okay 
+  resultContainer.sort(compare)
+
+
+
+  console.log(resultContainer)
+
+  // for (let values of resultContainer) {
+  //   for (let single of values) {
+  //     console.log(single);
+  //   }
+  // }
+
   return resultContainer;
 }
 
@@ -92,14 +116,11 @@ function performanceTest() {
       { Element: "Fe", Mass: 55.935 },
 
       { Element: "OA", Mass: 281.248 },
-      { Element: "LA", Mass: 279.233 },
-
-      { Element: "LA", Mass: 271.233 },
-      { Element: "LA", Mass: 272.233 },
-      { Element: "LA", Mass: 274.233 },
-      { Element: "LA", Mass: 270.233 },
+      { Element: "O", Mass: 15.995 },
     ],
-    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    955.6,
+    5
   );
 
   console.timeEnd();
